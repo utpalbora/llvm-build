@@ -1,4 +1,5 @@
 #!/bin/bash -eux
+#sudo apt-get install -fmy gcc g++ binutils binutils-dev autoconf automake make m4 libtool flex bison build-essential ninja-build cmake ccache gawk texinfo git subversion libglpk-dev libgmp-dev libmpfr-dev libmpfrc++-dev zlib1g-dev libxml2 pkg-config python perl tcl
 
 BRANCH=${1:-master}
 export BASE=`pwd`
@@ -33,6 +34,7 @@ done
 mkdir -p ${LLVM_BUILD}
 cd ${LLVM_BUILD}
 
+if ! -f $HOME/bin/clang; then
 export CC=gcc
 export CXX=g++
 #export LDFLAGS="-fuse-ld=gold"
@@ -57,7 +59,7 @@ else
     make install
     make clean
 fi
-
+fi
 #bootstrap
 export CC=$HOME/bin/clang
 export CXX=$HOME/bin/clang++
