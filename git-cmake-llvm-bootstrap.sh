@@ -2,15 +2,15 @@
 #sudo apt-get install -fmy gcc g++ binutils binutils-dev autoconf automake make m4 libtool flex bison build-essential ninja-build cmake ccache gawk texinfo git subversion libglpk-dev libgmp-dev libmpfr-dev libmpfrc++-dev zlib1g-dev libxml2 pkg-config python perl tcl
 
 if [[ "$1" == "-h" ]]; then
-  echo "Usage: $0 git_branch path_to_parent_of_llvm"
-  echo "example: $0 release_70 /home/username/base"
+  echo "Usage: $0 path_to_parent_of_llvm git_branch"
+  echo "example: $0 /home/username/base release_70"
   exit 0
 fi
 
-BRANCH=${1:-master}
-export BASE=${2:-`pwd`}
+BRANCH=${2:-master}
+export BASE=${1:-`pwd`}
 export LLVM_SRC=${BASE}/llvm
-export LLVM_BUILD=${BASE}/build/${1:-ninja}
+export LLVM_BUILD=${BASE}/build/${2:-ninja}
 export POLLY_SRC=${LLVM_SRC}/tools/polly
 export CLANG_SRC=${LLVM_SRC}/tools/clang
 export LLD_SRC=${LLVM_SRC}/tools/lld
