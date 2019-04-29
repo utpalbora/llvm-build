@@ -10,7 +10,7 @@ fi
 BRANCH=${2:-master}
 export BASE=${1:-`pwd`}
 export LLVM_SRC=${BASE}/llvm
-export LLVM_BUILD=${BASE}/build/${2:-ninja}
+export LLVM_BUILD=${BASE}/build/${2:-ninja}_dbg
 export POLLY_SRC=${LLVM_SRC}/tools/polly
 export CLANG_SRC=${LLVM_SRC}/tools/clang
 export LLD_SRC=${LLVM_SRC}/tools/lld
@@ -80,7 +80,7 @@ export LDFLAGS="-fuse-ld=gold -Wl,-rpath=$HOME/lib64 -Wl,-rpath=$HOME/lib"
 if which cmake ; then
   cmake -G Ninja \
   -DBUILD_SHARED_LIBS=OFF \
-  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_BUILD_TYPE=Debug \
   -DCMAKE_C_FLAGS_RELEASE= \
   -DCMAKE_CXX_FLAGS_RELEASE= \
   -DCMAKE_INSTALL_PREFIX=/home/`whoami`/installs/llvm-$(date +'%Y-%m-%d') \
@@ -102,7 +102,7 @@ if which cmake ; then
 #  -DLLVM_USE_SANITIZER='Address;Undefined;Thread;Memory' \
 else
     ${LLVM_SRC}/configure --enable-assertions --enable-debug-runtime
-    #--prefix=/install/path/
+    #--prefix=/home/`whoami`/installs/llvm-$(date +'%Y-%m-%d'
     #--enable-assertions is debug build with assertions
     #--disable-optimized is debug build
     #--enable-optimized is release build
