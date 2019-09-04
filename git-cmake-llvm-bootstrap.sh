@@ -40,6 +40,11 @@ done
 mkdir -p ${LLVM_BUILD}
 cd ${LLVM_BUILD}
 
+if [ ! -d /usr/include/asm ]; then
+  sudo ln -sf /usr/include/x86_64-linux-gnu/asm /usr/include/asm
+  #sudo ln -s /usr/include/asm-generic /usr/include/asm
+fi
+
 if [ ! -f $HOME/bin/clang ]; then
 export CC=gcc
 export CXX=g++
@@ -74,8 +79,6 @@ export CXX=$HOME/bin/clang++
 export CFLAGS='-O3 -DNDEBUG -gmlt -march=native -fno-omit-frame-pointer'
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-fuse-ld=gold -Wl,-rpath=$HOME/lib64 -Wl,-rpath=$HOME/lib"
-#sudo ln -sf /usr/include/x86_64-linux-gnu/asm /usr/include/asm
-#sudo ln -s /usr/include/asm-generic /usr/include/asm
 
 if which cmake ; then
   cmake -G Ninja \
@@ -92,7 +95,7 @@ if which cmake ; then
   -DLLVM_BINUTILS_INCDIR=/usr/include \
   -DLLVM_CCACHE_BUILD=ON \
   -DLLVM_ENABLE_LIBCXX=ON \
-  -DLLVM_ENABLE_LLD=ON \
+  -DLLVM_ENABLE_LLD=OFF \
   -DLLVM_ENABLE_ASSERTIONS=ON \
   -DLLVM_INCLUDE_GO_TESTS=ON \
   -DLLVM_LIBDIR_SUFFIX=64 \
