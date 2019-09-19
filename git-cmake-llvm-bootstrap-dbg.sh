@@ -21,6 +21,7 @@ export LIBCXXABI_SRC=${LLVM_SRC}/projects/libcxxabi
 export CLANG_EXTRA_SRC=${CLANG_SRC}/tools/extra
 export TEST_SUITE=${LLVM_SRC}/projects/test-suite
 
+cloneStart=$(date +%s%6N)
 for GPath in ${LLVM_SRC} ${POLLY_SRC} ${CLANG_SRC} ${LLD_SRC} ${COMPILER_RT_SRC} ${OMP_SRC} ${LIBCXX_SRC} ${LIBCXXABI_SRC} ${CLANG_EXTRA_SRC} ${TEST_SUITE} ;
 do (
     if ! test -d ${GPath}; then
@@ -36,10 +37,19 @@ do (
     fi
 );
 done
+cloneEnd=$(date +%s%6N)
+cloneTime=$(echo "scale=3; (${cloneEnd:-0}-${cloneStart:-0})/1000000"|bc)
+echo "Time taken to fetch LLVM source :  $cloneTime seconds"
 
 mkdir -p ${LLVM_BUILD}
 cd ${LLVM_BUILD}
 
+if [ ! -d /usr/include/asm ]; then
+  sudo ln -sf /usr/include/x86_64-linux-gnu/asm /usr/include/asm
+  #sudo ln -s /usr/include/asm-generic /usr/include/asm
+fi
+
+compileStart=$(date +%s%6N)
 if [ ! -f $HOME/bin/clang ]; then
 export CC=gcc
 export CXX=g++
@@ -74,8 +84,6 @@ export CXX=$HOME/bin/clang++
 export CFLAGS='-O3 -DNDEBUG -gmlt -march=native -fno-omit-frame-pointer'
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-fuse-ld=gold -Wl,-rpath=$HOME/lib64 -Wl,-rpath=$HOME/lib"
-#sudo ln -sf /usr/include/x86_64-linux-gnu/asm /usr/include/asm
-#sudo ln -s /usr/include/asm-generic /usr/include/asm
 
 if which cmake ; then
   cmake -G Ninja \
@@ -112,3 +120,6 @@ else
 
     make -j `nproc`
 fi
+compileEnd=$(date +%s%6N)
+compileTime=$(echo "scale=3; (${compileEnd:-0}-${compileStart:-0})/1000000"|bc)
+echo "Time taken to compile LLVM :  $compileTime seconds"
